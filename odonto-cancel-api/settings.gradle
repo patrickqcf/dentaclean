@@ -1,0 +1,3 @@
+rootProject.name = 'odonto-cancel-api'
+include 'odonto-schedulle-api'
+
