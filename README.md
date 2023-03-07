@@ -24,7 +24,7 @@ Projeto de clínica odontológica para desenvolvimento de habilidades e conceito
 ## CLONAR CODIGO FONTE
 
 ```
-git clone TODO
+git clone git@github.com:patrickqcf/dentaclean.git
 ```
 
 ## DEPENDENCIAS
