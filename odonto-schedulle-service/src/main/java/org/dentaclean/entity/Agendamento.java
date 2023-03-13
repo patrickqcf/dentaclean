@@ -1,14 +1,20 @@
 package org.dentaclean.entity;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-
+@Entity
 @Table(name = "agendamento")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Agendamento {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,5 +35,13 @@ public class Agendamento {
    @ManyToOne
    @JoinColumn(name = "agendamento_id")
    private Agendamento agendamentoId;
+   @Column(name = "created_at", nullable = false, updatable = false)
+   private LocalDateTime createdAt;
+   @Column(name = "update_at", nullable = false, updatable = false)
+   private LocalDateTime updatedAt;
 
+   @PrePersist
+   public void prePresist() {
+      createdAt = LocalDateTime.now();
+   }
 }
