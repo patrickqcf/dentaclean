@@ -1,9 +1,6 @@
 package org.dentaclean.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -11,10 +8,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "agendamento")
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 public class Agendamento {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
