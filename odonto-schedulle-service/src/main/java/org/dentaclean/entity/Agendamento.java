@@ -29,13 +29,5 @@ public class Agendamento {
    @ManyToOne
    @JoinColumn(name = "agendamento_id")
    private Agendamento agendamentoId;
-   @Column(name = "created_at", nullable = false, updatable = false)
-   private LocalDateTime createdAt;
-   @Column(name = "update_at", nullable = false, updatable = false)
-   private LocalDateTime updatedAt;
 
-   @PrePersist
-   public void prePresist() {
-      createdAt = LocalDateTime.now();
-   }
 }
