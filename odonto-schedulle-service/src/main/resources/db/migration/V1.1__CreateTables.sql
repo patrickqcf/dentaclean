@@ -13,7 +13,7 @@ CREATE TABLE `agendamento` (
   `dentista_id` bigint NOT NULL,
   `hora_fim` datetime(6) NOT NULL,
   `hora_inicio` datetime(6) NOT NULL,
-  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `agendamento_id` bigint DEFAULT NULL,
   `status_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
