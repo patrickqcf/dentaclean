@@ -8,12 +8,12 @@ CREATE TABLE `status` (
 CREATE TABLE `agendamento` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `client_id` bigint NOT NULL,
-  `created_at` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `data_agendamento` date NOT NULL,
   `dentista_id` bigint NOT NULL,
   `hora_fim` datetime(6) NOT NULL,
   `hora_inicio` datetime(6) NOT NULL,
-  `updated_at` datetime(6) TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `agendamento_id` bigint DEFAULT NULL,
   `status_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
@@ -33,4 +33,15 @@ CREATE TABLE `historico` (
   KEY `FKh1w6ucrdgck0hkjqgdabf3bru` (`status_id`),
   CONSTRAINT `FKh1w6ucrdgck0hkjqgdabf3bru` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`),
   CONSTRAINT `FKqna0ft7r0e72bmbnj3q6g33rj` FOREIGN KEY (`agendamento_id`) REFERENCES `agendamento` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `jornada_trabalho` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `clinica_id` bigint NOT NULL,
+  `dentista_id` bigint NOT NULL,
+  `dia_semana` int DEFAULT NULL,
+  `hora_fim` datetime(6) NOT NULL,
+  `hora_inicio` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
