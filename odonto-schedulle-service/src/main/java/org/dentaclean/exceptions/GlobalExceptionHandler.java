@@ -118,7 +118,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
    public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request) {
       HttpStatus status = HttpStatus.BAD_REQUEST;
       var titulo = "Operação não permitida";
-      var mensagem = "";
+      var mensagem = ex.getMessage();
       if (ex.getCause() instanceof ConstraintViolationException) {
          ConstraintViolationException constraintViolationException = (ConstraintViolationException) ex.getCause();
          if (constraintViolationException.getCause().getMessage().contains("Duplicate")) {
