@@ -1,6 +1,6 @@
 package org.dentaclean.entity;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,6 +9,9 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "jornada_trabalho")
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class JornadaTrabalho {
 
     @Id

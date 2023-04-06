@@ -20,7 +20,7 @@ public class JornadaTrabalhoController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public JornadaTrabalho salvar(@Valid @RequestBody JornadaTrabalho obj) {
-        return service.craete(obj);
+        return service.create(obj);
     }
 
     @PutMapping("/{id}")

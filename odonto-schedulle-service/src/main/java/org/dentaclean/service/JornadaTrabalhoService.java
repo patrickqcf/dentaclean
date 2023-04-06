@@ -16,15 +16,16 @@ public class JornadaTrabalhoService {
 
     private JornadaTrabalhoRepository repository;
 
-    public JornadaTrabalho craete(JornadaTrabalho obj) {
+    public JornadaTrabalho create(JornadaTrabalho obj) {
         existeJornadaTrabalho(obj);
         return repository.save(obj);
     }
 
+
     public JornadaTrabalho update(Long id, JornadaTrabalho obj) {
         findById(id);
         obj.setId(id);
-        return craete(obj);
+        return create(obj);
     }
 
     public JornadaTrabalho findById(Long id) {
@@ -39,7 +40,7 @@ public class JornadaTrabalhoService {
         return repository.findAllByDentistaId(dentistaID);
     }
 
-    private void existeJornadaTrabalho(JornadaTrabalho obj) {
+    public void existeJornadaTrabalho(JornadaTrabalho obj) {
         Optional<JornadaTrabalho> existed = repository.existeJornadaTrabalho(obj.getDentistaId(), obj.getDiaSemana(),
                 obj.getHoraInicio(), obj.getHoraFim());
         if (existed.isPresent() && !existed.get().getId().equals(obj.getId())) {

@@ -13,15 +13,13 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'mysql:mysql-connector-java:8.0.27'
     implementation 'org.flywaydb:flyway-core:7.1.1'
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
 
     implementation 'org.springframework.kafka:spring-kafka'
 
@@ -30,6 +28,6 @@ dependencies {
     testImplementation 'org.springframework.kafka:spring-kafka-test'
 }
 
-test {
+tasks.named('test') {
     useJUnitPlatform()
 }
