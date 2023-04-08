@@ -9,7 +9,6 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "jornada_trabalho")
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class JornadaTrabalho {
