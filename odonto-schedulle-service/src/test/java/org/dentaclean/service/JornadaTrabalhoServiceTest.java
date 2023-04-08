@@ -9,15 +9,18 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
+import static org.dentaclean.builders.JornadaTrabalhoBuilder.umJornadaTrabalhoBuilder;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@SpringBootTest(classes = JornadaTrabalhoServiceTest.class)
 class JornadaTrabalhoServiceTest {
 
     @InjectMocks
@@ -26,58 +29,42 @@ class JornadaTrabalhoServiceTest {
     @Mock
     private JornadaTrabalhoRepository repository;
 
-    private JornadaTrabalho jornadaTrabalho;
-
-
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void testCreateWithSucessoJornadaTrabalho() {
-        // Cria instâncias necessarias para o teste
-        jornadaTrabalho = new JornadaTrabalho(1L, 1L, 1L, 0, LocalTime.of(1, 1), LocalTime.of(1, 1));
+    void deveRetornaUmaJornadaTrabalhoComId() {
 
-        Optional<JornadaTrabalho> optional = Optional.of(jornadaTrabalho);
+        when(repository.existeJornadaTrabalho(2L, 0,
+                LocalTime.of(14, 0), LocalTime.of(17, 0)))
+                .thenReturn(umJornadaTrabalhoBuilder().optionalTrabalho());
 
-        when(repository.existeJornadaTrabalho(jornadaTrabalho.getDentistaId(), jornadaTrabalho.getDiaSemana(),
-                jornadaTrabalho.getHoraInicio(), jornadaTrabalho.getHoraFim()))
-                .thenReturn(optional);
+        when(repository.save(any())).thenReturn(umJornadaTrabalhoBuilder().agora());
 
-        var jornada = JornadaTrabalho.builder().dentistaId(2L).clinicaId(1L).diaSemana(0).horaInicio(
-                LocalTime.of(1, 1)).horaFim(LocalTime.of(1, 1)).build();
-
-        when(repository.save(any())).thenReturn(jornada);
-
-        JornadaTrabalho result = service.create(jornada);
+        var result = service.create(umJornadaTrabalhoBuilder().agora());
 
         assertNotNull(result);
         assertEquals(JornadaTrabalho.class, result.getClass());
-        assertEquals(jornada, result);
+        assertEquals(umJornadaTrabalhoBuilder().agora(), result);
         assertEquals(2, result.getDentistaId(), "ID do dentista");
-        assertEquals(1, result.getClinicaId(),"ID do clinica");
-        assertEquals(0, result.getDiaSemana(),"Dia semana");
-        assertEquals("01:01", result.getHoraInicio().toString(),"Hora inicial");
-        assertEquals("01:01", result.getHoraFim().toString(),"Hora fim");
+        assertEquals(1, result.getClinicaId(), "ID do clinica");
+        assertEquals(0, result.getDiaSemana(), "Dia semana");
+        assertEquals("08:00", result.getHoraInicio().toString(), "Hora inicial");
+        assertEquals("12:00", result.getHoraFim().toString(), "Hora fim");
 
     }
 
     @Test
-    public void testCreateWithExistingJornadaTrabalho() {
+    void deveRetornaUmaDataIntegrityViolationExceptionComIdJaCadastrado() {
 
-        jornadaTrabalho = JornadaTrabalho.builder().id(1L).dentistaId(1L).diaSemana(0).horaInicio(
-                LocalTime.of(1, 1)).horaFim(LocalTime.of(1, 1)).build();
-
-        Optional<JornadaTrabalho> optional = Optional.of(jornadaTrabalho);
-
-        when(repository.existeJornadaTrabalho(jornadaTrabalho.getDentistaId(), jornadaTrabalho.getDiaSemana(),
-                jornadaTrabalho.getHoraInicio(), jornadaTrabalho.getHoraFim()))
-                .thenReturn(optional);
+        when(repository.existeJornadaTrabalho(2L, 0,
+                LocalTime.of(8, 0), LocalTime.of(12, 0)))
+                .thenReturn(umJornadaTrabalhoBuilder().jornadaTrabalhoExistente());
 
         try {
-            service.create(JornadaTrabalho.builder().dentistaId(1L).diaSemana(0).horaInicio(
-                    LocalTime.of(1, 1)).horaFim(LocalTime.of(1, 1)).build());
+            service.create(umJornadaTrabalhoBuilder().agora());
             fail("Verificar falha na implementação desse teste");
         } catch (DataIntegrityViolationException ex) {
             assertEquals(DataIntegrityViolationException.class, ex.getClass());
@@ -85,47 +72,77 @@ class JornadaTrabalhoServiceTest {
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  /*  @Test
-    public void testExisteJornadaTrabalho() {
-        // Crie uma instância de JornadaTrabalho para teste
-        JornadaTrabalho jornada = new JornadaTrabalho();
-        jornada.setDentistaId(1L);
-        jornada.setDiaSemana(0);
-        jornada.setHoraInicio(LocalTime.of(8, 0));
-        jornada.setHoraFim(LocalTime.of(11, 0));
-
-        // Crie um objeto Optional com uma instância de JornadaTrabalho existente
-        Optional<JornadaTrabalho> jornadaExistente = Optional.of(jornadaTrabalho);
-
-        // Crie um mock do repositório e configure-o para retornar o objeto Optional criado acima
-        when(repository.existeJornadaTrabalho(jornada.getDentistaId(), jornada.getDiaSemana(),
-                jornada.getHoraInicio(), jornada.getHoraFim())).thenReturn(jornadaExistente);
-
-
-        // Chame o método a ser testado com a instância de JornadaTrabalho criada acima
-        // Certifique-se de que o método lança uma exceção de DataIntegrityViolationException
-        assertThrows(DataIntegrityViolationException.class, () -> service.existeJornadaTrabalho(jornada));
+    @Test
+    void deveRertornaUmaJorandaTrabalhoComIdCadastrado() {
+        when(repository.findById(1L)).thenReturn(umJornadaTrabalhoBuilder().optionalTrabalho());
+        JornadaTrabalho result = service.findById(1L);
+        assertNotNull(result);
+        assertEquals(JornadaTrabalho.class, result.getClass());
+        assertEquals(1, result.getId(), "ID");
     }
-*/
+
+    @Test
+    void deveRetornaUmaEmptyResultDataAccessExceptionComIdInexistente() {
+        when(repository.findById(1L)).thenReturn(umJornadaTrabalhoBuilder().optionalTrabalho());
+        try {
+            service.findById(-1L);
+            fail("Verificar falha na implementação desse teste");
+        } catch (EmptyResultDataAccessException ex) {
+            assertEquals(EmptyResultDataAccessException.class, ex.getClass());
+            verify(repository, times(1)).findById(-1L);
+            verify(repository, never()).save(any());
+        }
+    }
+
+    @Test
+    void deveRetornaUmaListaComIdDoDentistaCadastrado() {
+        when(repository.findAllByDentistaId(1L)).thenReturn(List.of(umJornadaTrabalhoBuilder().agora()));
+        List<JornadaTrabalho> result = service.findByDentistaId(1L);
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(JornadaTrabalho.class, result.get(0).getClass());
+    }
+
+    @Test
+    void deveRetornaUmaListaVaziaComIdDoDentistaInexistente() {
+        when(repository.findAllByDentistaId(1L)).thenReturn(List.of(umJornadaTrabalhoBuilder().agora()));
+        List<JornadaTrabalho> result = service.findByDentistaId(-1L);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void deveRetornaUmaJornadaTrabalhoEditada() {
+        when(repository.findById(1L)).thenReturn(Optional.of(umJornadaTrabalhoBuilder().agora()));
+        when(repository.save(umJornadaTrabalhoBuilder().agora())).thenReturn(umJornadaTrabalhoBuilder().jornadaTrabalhoEditada());
+
+        var result = service.update(1L, umJornadaTrabalhoBuilder().agora());
+
+        assertNotNull(result);
+        assertEquals(JornadaTrabalho.class, result.getClass());
+        assertEquals(umJornadaTrabalhoBuilder().jornadaTrabalhoEditada(), result);
+        assertEquals(1, result.getId(), "ID");
+        assertEquals(2, result.getDentistaId(), "ID do dentista");
+        assertEquals(2, result.getClinicaId(), "ID do clinica");
+        assertEquals(7, result.getDiaSemana(), "Dia semana");
+        assertEquals("14:00", result.getHoraInicio().toString(), "Hora inicial");
+        assertEquals("17:00", result.getHoraFim().toString(), "Hora fim");
+    }
+
+    @Test
+    void deveRetornaUmaExceptionJornadaTrabalhoEditadaJaCadastrada() {
+        Long id = 1L;
+        when(repository.findById(id)).thenReturn(Optional.of(umJornadaTrabalhoBuilder().agora()));
+        when(repository.existeJornadaTrabalho(2L, 0,
+                LocalTime.of(8, 0), LocalTime.of(12, 0)))
+                .thenReturn(umJornadaTrabalhoBuilder().jornadaTrabalhoExistente());
+
+        assertThrows(DataIntegrityViolationException.class, () -> {
+            service.update(id, umJornadaTrabalhoBuilder().agora());
+        });
+
+        verify(repository, times(1)).findById(id);
+        verify(repository, never()).save(any());
+    }
 
 
 }
