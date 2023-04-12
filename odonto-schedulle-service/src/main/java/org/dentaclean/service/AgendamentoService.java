@@ -50,7 +50,7 @@ public class AgendamentoService {
     }
 
     private void existeAgendamento(Agendamento obj) {
-        Integer existed = re    pository.existeAgendamento(obj.getDentistaId(), obj.getDataAgendamento().getDayOfWeek().getValue(),
+        Integer existed = repository.existeAgendamento(obj.getDentistaId(), obj.getDataAgendamento().getDayOfWeek().getValue(),
                 obj.getDataAgendamento(), obj.getHoraInicio(), obj.getHoraFim());
         if (existed > 0) {
             throw new DataIntegrityViolationException("Agendamento indisponível.");
