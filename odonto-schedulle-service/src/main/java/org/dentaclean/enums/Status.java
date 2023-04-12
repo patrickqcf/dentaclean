@@ -9,7 +9,7 @@ public enum Status {
 
     CRIADO("CRIADO"),
     CANCELADO("CANCELADO"),
-    FINALIZDO("FINALIZADO");
+    FINALIZADO("FINALIZADO");
 
     private String descricao;
 
