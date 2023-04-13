@@ -1,9 +1,6 @@
+**/.gradle/
+**/.idea/
+**/build/
+**/my-data/
 
-.idea/compiler.xml
-.idea/dentaclean.iml
-.idea/gradle.xml
-.idea/jarRepositories.xml
-.idea/jpa-buddy.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/vcs.xml
+

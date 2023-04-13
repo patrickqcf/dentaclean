@@ -140,7 +140,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
    @ExceptionHandler({EmptyResultDataAccessException.class})
    protected ResponseEntity<Object> handleEmptyResultDataAccessException(EmptyResultDataAccessException ex, WebRequest request) {
       var titulo = "Recurso não encontrado";
-      var msn = "O recurso que você tentou acessar, é inexistente.";
+      var msn = "Registro não encontrado.";
+      HttpStatus status = HttpStatus.BAD_REQUEST;
+      Problema problema = new Problema(status.value(), LocalDateTime.now(), titulo, msn, null);
+      return handleExceptionInternal(ex, problema, null, status, request);
+   }
+
+   @ExceptionHandler({NegocioException.class})
+   protected ResponseEntity<Object> handleNegocioException(NegocioException ex, WebRequest request) {
+      var titulo = "Regra de negócio";
+      var msn = ex.getMessage();
       HttpStatus status = HttpStatus.BAD_REQUEST;
       Problema problema = new Problema(status.value(), LocalDateTime.now(), titulo, msn, null);
       return handleExceptionInternal(ex, problema, null, status, request);
