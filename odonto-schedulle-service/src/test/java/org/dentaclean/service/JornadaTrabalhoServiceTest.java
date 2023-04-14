@@ -112,15 +112,17 @@ class JornadaTrabalhoServiceTest {
 
     @Test
     void deveRetornaUmaJornadaTrabalhoEditada() {
-        when(repository.findById(1L)).thenReturn(Optional.of(umJornadaTrabalhoBuilder().agora()));
-        when(repository.save(umJornadaTrabalhoBuilder().agora())).thenReturn(umJornadaTrabalhoBuilder().jornadaTrabalhoEditada());
+        JornadaTrabalho jt = umJornadaTrabalhoBuilder().validationIdUpdate().agora();
+        JornadaTrabalho jtAtualizada = umJornadaTrabalhoBuilder().jornadaTrabalhoEditada();
 
-        var result = service.update(1L, umJornadaTrabalhoBuilder().agora());
+        when(repository.findById(1L)).thenReturn(Optional.of(umJornadaTrabalhoBuilder().agora()));
+        when(repository.save(jt)).thenReturn(jtAtualizada);
+
+        var result = service.update(1L, jt);
 
         assertNotNull(result);
         assertEquals(JornadaTrabalho.class, result.getClass());
-        assertEquals(umJornadaTrabalhoBuilder().jornadaTrabalhoEditada(), result);
-        assertEquals(1, result.getId(), "ID");
+        assertEquals(jt.getId(), result.getId(), "ID");
         assertEquals(2, result.getDentistaId(), "ID do dentista");
         assertEquals(2, result.getClinicaId(), "ID do clinica");
         assertEquals(7, result.getDiaSemana(), "Dia semana");

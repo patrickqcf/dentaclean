@@ -27,9 +27,9 @@ public class AgendamentoController {
         return service.findById(id);
     }
 
-    @PostMapping("/remarcar")
-    public SuccessResponse remarcar(@Valid @RequestBody Agendamento obj) {
-        service.remarcar(obj);
+    @PutMapping("/{id}")
+    public SuccessResponse remarcar(@PathVariable Long id, @Valid @RequestBody Agendamento obj) {
+        service.remarcar(id, obj);
         return SuccessResponse.aply("Registro remarcado com sucesso.");
     }
 

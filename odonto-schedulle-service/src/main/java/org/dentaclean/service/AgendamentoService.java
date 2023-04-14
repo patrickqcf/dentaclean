@@ -9,6 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -40,10 +41,10 @@ public class AgendamentoService {
         throw new NegocioException("Agendamento já foi cancelado ou finalizado anteriormente.");
     }
 
-    public Agendamento remarcar(Agendamento obj) {
-        if (obj.getStatus() == Status.CRIADO) {
-            throw new NegocioException("Não é possível remarcar um agendamento sem ele estiver cancelado.");
-        }
+    @Transactional
+    public Agendamento remarcar(Long id, Agendamento obj) {
+        cancel(id);
+        obj.setId(null);
         Agendamento agendamento = create(obj);
         return agendamento;
     }
