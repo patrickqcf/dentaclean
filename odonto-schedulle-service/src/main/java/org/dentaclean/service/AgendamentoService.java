@@ -9,7 +9,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -28,25 +27,25 @@ public class AgendamentoService {
         if (optional.isPresent()) {
             return optional.get();
         }
-        throw new EmptyResultDataAccessException(1);
+        throw new EmptyResultDataAccessException(0);
     }
 
-    public SuccessResponse cancel(Long id) {
+    public Agendamento cancel(Long id) {
         Agendamento agendamento = findById(id);
-        if (!agendamento.getStatus().equals(Status.CRIADO)) {
-            throw new NegocioException("Registro já cancelado.");
+        if (agendamento.getStatus() == Status.CRIADO) {
+            agendamento.setStatus(Status.CANCELADO);
+            agendamento.setAgendamentoId(agendamento);
+            return repository.save(agendamento);
         }
-        agendamento.setStatus(Status.CANCELADO);
-        agendamento.setAgendamentoId(agendamento);
-        repository.save(agendamento);
-        return SuccessResponse.aply("Registro cancelado com sucesso.");
+        throw new NegocioException("Agendamento já foi cancelado ou finalizado anteriormente.");
     }
 
-    @Transactional
-    public SuccessResponse remarcar(Long id, Agendamento obj) {
-        cancel(id);
-        create(obj);
-        return SuccessResponse.aply("Registro remarcado com sucesso.");
+    public Agendamento remarcar(Agendamento obj) {
+        if (obj.getStatus() == Status.CRIADO) {
+            throw new NegocioException("Não é possível remarcar um agendamento sem ele estiver cancelado.");
+        }
+        Agendamento agendamento = create(obj);
+        return agendamento;
     }
 
     private void existeAgendamento(Agendamento obj) {

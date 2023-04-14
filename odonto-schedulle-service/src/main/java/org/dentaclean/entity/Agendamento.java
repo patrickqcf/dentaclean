@@ -1,10 +1,11 @@
 package org.dentaclean.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import lombok.*;
 import org.dentaclean.enums.Status;
 
 import javax.persistence.*;
+import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -12,6 +13,8 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "agendamento")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Agendamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +30,7 @@ public class Agendamento {
 
     @NotNull
     @Column(name = "data_agendamento", nullable = false)
+    @FutureOrPresent(message = "A data de agendamento deve ser posterior ou igual a data atual")
     private LocalDate dataAgendamento;
 
     @NotNull
