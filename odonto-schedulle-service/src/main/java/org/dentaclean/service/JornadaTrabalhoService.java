@@ -3,7 +3,6 @@ package org.dentaclean.service;
 import lombok.AllArgsConstructor;
 import org.dentaclean.entity.JornadaTrabalho;
 import org.dentaclean.repository.JornadaTrabalhoRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -23,9 +22,9 @@ public class JornadaTrabalhoService {
     }
 
     public JornadaTrabalho update(Long id, JornadaTrabalho obj) {
-        JornadaTrabalho jornadaTrabalho = findById(id);
-        BeanUtils.copyProperties(obj, jornadaTrabalho, "id");
-        return create(jornadaTrabalho);
+        findById(id);
+        obj.setId(id);
+        return create(obj);
     }
 
     public JornadaTrabalho findById(Long id) {

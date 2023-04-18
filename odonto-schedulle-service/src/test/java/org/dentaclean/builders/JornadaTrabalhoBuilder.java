@@ -28,6 +28,11 @@ public class JornadaTrabalhoBuilder {
         return jornadaTrabalho;
     }
 
+    public JornadaTrabalhoBuilder validationIdUpdate(){
+        this.jornadaTrabalho.setId(5L);
+        return this;
+    }
+
     public Optional<JornadaTrabalho> optionalTrabalho() {
         return Optional.of(umJornadaTrabalhoBuilder().agora());
     }
