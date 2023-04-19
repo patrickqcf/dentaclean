@@ -2,11 +2,14 @@ package org.dentaclean.service;
 
 import org.dentaclean.builders.AgendamentoBuilder;
 import org.dentaclean.entity.Agendamento;
+import org.dentaclean.entity.Historico;
 import org.dentaclean.enums.Status;
 import org.dentaclean.exceptions.NegocioException;
 import org.dentaclean.repository.AgendamentoRepository;
+import org.dentaclean.repository.HistoricoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -15,7 +18,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import static org.dentaclean.builders.AgendamentoBuilder.umAgendamentoBuilder;
@@ -31,6 +36,12 @@ class AgendamentoServiceTest {
     private AgendamentoService service;
 
     @Mock
+    private HistoricoService historicoService;
+
+    @Mock
+    private HistoricoRepository historicoRepository;
+
+    @Mock
     private Agendamento agendamento;
 
     @Mock
@@ -44,12 +55,16 @@ class AgendamentoServiceTest {
     @Test
     void deveRetornaUmAgendamentoComSucesso() {
 
+        agendamento = umAgendamentoBuilder().agora();
+
         when(repository.existeAgendamento(1L, 1,
                 LocalDate.of(2023, 3, 13),
                 LocalTime.of(8, 0),
                 LocalTime.of(11, 0))).thenReturn(0);
 
         when(repository.save(any())).thenReturn(umAgendamentoBuilder().agora());
+
+        when(historicoRepository.save(any())).thenReturn(getHistorico());
 
         var result = service.create(umAgendamentoBuilder().agora());
 
@@ -61,6 +76,8 @@ class AgendamentoServiceTest {
         assertEquals("08:00", result.getHoraInicio().toString(), "Hora inicial");
         assertEquals("11:00", result.getHoraFim().toString(), "Hora fim");
         assertNull(result.getAgendamentoId());
+
+        verify(repository, times(1)).save(umAgendamentoBuilder().agora());
     }
 
     @Test
@@ -101,12 +118,16 @@ class AgendamentoServiceTest {
     }
 
     @Test
-    public void deveRetornaUmAgendamentoCanceladoComSuccess() {
+    void deveRetornaUmAgendamentoCanceladoComSuccess() {
 
         agendamento = AgendamentoBuilder.umAgendamentoBuilder().agora();
 
         when(repository.findById(1L)).thenReturn(Optional.of(agendamento));
         when(repository.save(agendamento)).thenReturn(agendamento);
+
+        Historico historico = getHistorico();
+
+        when(historicoService.create(historico)).thenReturn(historico);
 
         Agendamento agendamentoCancelado = service.cancel(1L);
 
@@ -153,6 +174,38 @@ class AgendamentoServiceTest {
         assertEquals(5, novoAgendamento.getId());
         assertNotNull(result);
         assertEquals(Status.CRIADO, result.getStatus());
-
     }
+
+    @Test
+    void deveCriarUmNovoHistoricoComSucesso() {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        Agendamento agendamento = umAgendamentoBuilder().agora();
+
+        Historico historicoEsperado = getHistorico();
+
+        when(historicoService.create(any(Historico.class))).thenReturn(historicoEsperado);
+
+        Historico historico = service.createHistorico(agendamento);
+
+        ArgumentCaptor<Historico> historicoCaptor = ArgumentCaptor.forClass(Historico.class);
+        verify(historicoService).create(historicoCaptor.capture());
+
+        Historico historicoRetornado = historicoCaptor.getValue();
+
+        assertNotNull(historico);
+        assertEquals(Status.CRIADO, historicoRetornado.getStatus());
+        assertEquals(LocalDateTime.now().format(formatter), historicoRetornado.getData().format(formatter));
+        assertEquals(agendamento, historicoRetornado.getAgendamento());
+    }
+
+    private Historico getHistorico() {
+        var historico = new Historico();
+        historico.setData(LocalDateTime.of(2023, 4, 13, 8, 0));
+        historico.setStatus(agendamento.getStatus());
+        historico.setAgendamento(agendamento);
+        return historico;
+    }
+
 }

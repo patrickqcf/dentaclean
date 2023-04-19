@@ -53,8 +53,7 @@ public class AgendamentoService {
     public Agendamento remarcar(Long id, Agendamento obj) {
         cancel(id);
         obj.setId(null);
-        Agendamento agendamento = create(obj);
-        return agendamento;
+        return create(obj);
     }
 
     private void existeAgendamento(Agendamento obj) {
@@ -65,12 +64,12 @@ public class AgendamentoService {
         }
     }
 
-    private void createHistorico(Agendamento obj) {
+    public Historico createHistorico(Agendamento obj) {
         Historico historico = new Historico();
         historico.setAgendamento(obj);
         historico.setData(LocalDateTime.now());
         historico.setStatus(obj.getStatus());
-        historicoService.create(historico);
+        return  historicoService.create(historico);
     }
 
 }
