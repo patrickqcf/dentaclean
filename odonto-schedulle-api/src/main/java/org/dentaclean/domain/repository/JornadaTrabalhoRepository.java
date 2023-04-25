@@ -1,6 +1,6 @@
-package org.dentaclean.repository;
+package org.dentaclean.domain.repository;
 
-import org.dentaclean.response.JornadaTrabalho;
+import org.dentaclean.domain.model.JornadaTrabalho;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
