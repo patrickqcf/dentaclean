@@ -15,7 +15,7 @@ public class JsonListener {
 
     private final JornadaTrabalhoService jornadaTrabalhoService;
 
-    @KafkaListener(topics = "schedulle", groupId = "create-jornada", containerFactory = "jsonContainerFactory")
+    @KafkaListener(topics = "schedulle-topic", groupId = "create-jornada", containerFactory = "jsonContainerFactory")
     public void sendMessageJornadaTrabalho(@Payload JornadaTrabalho jornadaTrabalho) {
         log.info("Menssagem recebida com sucesso");
         jornadaTrabalhoService.create(jornadaTrabalho);
