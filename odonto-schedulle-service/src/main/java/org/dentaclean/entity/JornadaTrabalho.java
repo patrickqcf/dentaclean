@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "jornada_trabalho")
@@ -16,6 +17,10 @@ public class JornadaTrabalho {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull
+    @Column(name = "uuid", nullable = false)
+    private UUID uuid;
 
     @NotNull
     @Column(name = "dentista_id", nullable = false)
