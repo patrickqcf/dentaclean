@@ -12,7 +12,7 @@ public class JornadaTrabalhoBuilder {
     private JornadaTrabalho jornadaTrabalho;
 
     @NotNull
-    private UUID uuid = UUID.randomUUID();
+    private String uuid = UUID.randomUUID().toString();
 
     private JornadaTrabalhoBuilder() {
     }
