@@ -1,13 +1,24 @@
 package org.dentaclean.api.dtos;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
 
-@Getter
+
+@Entity
+@Table(name = "jornada_trabalho")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class JornadaTrabalhoDTO {
 
+    @Id
     private Long id;
     private String uuid;
     @NotNull
