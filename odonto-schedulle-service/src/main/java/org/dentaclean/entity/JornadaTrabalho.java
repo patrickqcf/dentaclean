@@ -20,7 +20,7 @@ public class JornadaTrabalho {
 
     @NotNull
     @Column(name = "uuid", nullable = false)
-    private UUID uuid;
+    private String uuid;
 
     @NotNull
     @Column(name = "dentista_id", nullable = false)

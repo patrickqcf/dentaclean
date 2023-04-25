@@ -20,7 +20,7 @@ public class ConsumerKafkaConfig {
     private final KafkaProperties properties;
 
     @Bean
-    public ConsumerFactory<String, Object> jsonConsumerFactory() {
+    public ConsumerFactory<String, Object> consumerFactory() {
         var configs = new HashMap<String, Object>();
         configs.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, properties.getBootstrapServers());
         configs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
