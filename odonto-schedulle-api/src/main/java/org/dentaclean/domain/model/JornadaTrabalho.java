@@ -1,15 +1,17 @@
-package org.dentaclean.response;
+package org.dentaclean.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Table;
 import java.time.LocalTime;
 
 @Entity
+@Table(name = "jornada_trabalho")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,15 +19,15 @@ public class JornadaTrabalho {
 
     @Id
     private Long id;
-    @NotNull
+    @Column(name = "dentista_id")
     private Long dentistaId;
-    @NotNull
+    @Column(name = "clinica_id")
     private Long clinicaId;
-    @NotNull
+    @Column(name = "dia_semana")
     private Integer diaSemana;
-    @NotNull
+    @Column(name = "hora_inicio")
     private LocalTime horaInicio;
-    @NotNull
+    @Column(name = "hora_fim")
     private LocalTime horaFim;
 
 }
