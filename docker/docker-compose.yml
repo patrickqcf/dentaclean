@@ -4,8 +4,6 @@ services:
   db:
     image: mysql:8
     container_name: dentaclean-mysql
-    networks:
-      - broker-kafka
     environment:
       - MYSQL_DATABASE=root
       - MYSQL_ROOT_PASSWORD=root
