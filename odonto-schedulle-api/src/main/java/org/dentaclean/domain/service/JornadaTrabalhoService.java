@@ -15,6 +15,7 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 import java.io.Serializable;
 import java.util.UUID;
 
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -25,12 +26,14 @@ public class JornadaTrabalhoService {
     private final KafkaTemplate<String, Serializable> kafkaTemplate;
 
     public SuccessResponse sendJornadaTrabalho(JornadaTrabalhoDTO obj) {
+
         String ID = UUID.randomUUID().toString();
+
         JornadaTrabalho jornadaTrabalho = mapper.mapToEntity(obj);
+
         jornadaTrabalho.setUuid(ID);
 
         ListenableFuture<SendResult<String, Serializable>> future = kafkaTemplate.send("schedulle-topic", jornadaTrabalho);
-
         future.addCallback(new ListenableFutureCallback<SendResult<String, Serializable>>() {
             @Override
             public void onSuccess(SendResult<String, Serializable> result) {
@@ -49,4 +52,6 @@ public class JornadaTrabalhoService {
 
         return SuccessResponse.aply("Mensagem entregue com sucesso!", ID);
     }
+
+
 }
