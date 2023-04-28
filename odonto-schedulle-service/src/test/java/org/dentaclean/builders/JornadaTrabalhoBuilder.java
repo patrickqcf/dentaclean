@@ -2,12 +2,17 @@ package org.dentaclean.builders;
 
 import org.dentaclean.entity.JornadaTrabalho;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
 import java.util.Optional;
+import java.util.UUID;
 
 public class JornadaTrabalhoBuilder {
 
     private JornadaTrabalho jornadaTrabalho;
+
+    @NotNull
+    private String uuid = UUID.randomUUID().toString();
 
     private JornadaTrabalhoBuilder() {
     }
@@ -28,7 +33,7 @@ public class JornadaTrabalhoBuilder {
         return jornadaTrabalho;
     }
 
-    public JornadaTrabalhoBuilder validationIdUpdate(){
+    public JornadaTrabalhoBuilder validationIdUpdate() {
         this.jornadaTrabalho.setId(5L);
         return this;
     }
@@ -38,13 +43,14 @@ public class JornadaTrabalhoBuilder {
     }
 
     public Optional<JornadaTrabalho> jornadaTrabalhoExistente() {
-        jornadaTrabalho = new JornadaTrabalho(2L, 1L, 1L, 0,
+
+        jornadaTrabalho = new JornadaTrabalho(2L, uuid, 1L, 1L, 0,
                 LocalTime.of(8, 0), LocalTime.of(12, 0));
         return Optional.of(jornadaTrabalho);
     }
 
     public JornadaTrabalho jornadaTrabalhoEditada() {
-        jornadaTrabalho = new JornadaTrabalho(1L, 2L, 2L, 7,
+        jornadaTrabalho = new JornadaTrabalho(1L, uuid, 2L, 2L, 7,
                 LocalTime.of(14, 0), LocalTime.of(17, 0));
         return jornadaTrabalho;
     }
